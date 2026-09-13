@@ -16,3 +16,4 @@ jobs:
         run: |
           echo "$TITLE" | grep -Eq '^(feature|bugfix|hotfix|docs|poc)/LDS-[0-9]{1,4}: .{5,}$' \
             || { echo "::error::Invalid title. Pattern: {type}/LDS-XXXX: imperative description"; exit 1; }
+      
