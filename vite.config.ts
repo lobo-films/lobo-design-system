@@ -17,7 +17,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@/styles/tokens" as *;`,
+        // TODO: Configurar una vez creados los tokens, LDS-31 (https://hipstha.atlassian.net/browse/LDS-31)
+        // additionalData: `@use "@/styles/tokens" as *;`,
       },
     },
   },
