@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc *)",
-      "Bash(npx prettier *)"
+      "Bash(npx prettier *)",
+      "Bash(npx oxlint *)",
+      "Bash(node -e 'const s=require\\(\"./node_modules/oxlint/configuration_schema.json\"\\); console.log\\(JSON.stringify\\(s.definitions.OxlintOptions.properties,null,1\\).slice\\(0,2500\\)\\)')",
+      "Bash(./node_modules/.bin/oxlint --help)",
+      "Bash(./node_modules/.bin/oxlint --rules -f json)",
+      "Bash(./node_modules/.bin/oxlint --rules)",
+      "Bash(rm r.txt)",
+      "Bash(node -e 'const r=require\\(\"/private/tmp/claude-501/-Users-hipstha-repos-lobo-design-system/34599073-c37b-49f9-a224-34c94e92dfa8/scratchpad/rules.json\"\\); const g={}; for\\(const x of r\\){ if\\(x.type_aware\\) continue; const k=x.scope+\"|\"+x.category; \\(g[k]??=[]\\).push\\(x.value\\)}; for\\(const k of Object.keys\\(g\\).sort\\(\\)\\) if\\(/^\\(eslint|typescript|react|react_perf|react-perf|jsx_a11y|jsx-a11y|import|unicorn|oxc|promise|vitest\\)\\\\|/.test\\(k\\) && !/nursery/.test\\(k\\)\\) console.log\\(k+\": \"+g[k].join\\(\", \"\\)\\)')",
+      "Bash(node -e ' *)",
+      "Bash(node -e 'const c=JSON.parse\\(require\\(\"fs\"\\).readFileSync\\(\".oxlintrc.json\",\"utf8\"\\)\\); c.rules[\"react/regla-falsa\"]=\"error\"; c[\"$schema\"]=undefined; require\\(\"fs\"\\).writeFileSync\\(process.argv[1],JSON.stringify\\(c\\)\\)' /private/tmp/claude-501/-Users-hipstha-repos-lobo-design-system/34599073-c37b-49f9-a224-34c94e92dfa8/scratchpad/bad.json)",
+      "Bash(./node_modules/.bin/oxlint -c /private/tmp/claude-501/-Users-hipstha-repos-lobo-design-system/34599073-c37b-49f9-a224-34c94e92dfa8/scratchpad/bad.json src/main.tsx)"
     ]
   }
 }

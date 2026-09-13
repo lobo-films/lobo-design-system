@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b",
     "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "prettier": "prettier . --check --cache --log-level warn",
     "prettier:fix": "prettier . --write --cache --log-level warn",
     "preview": "vite preview"
