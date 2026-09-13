@@ -1,0 +1,18 @@
+name: PR title
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  title:
+    runs-on: ubuntu-latest
+    name: pr-title
+    steps:
+      - name: Title pattern validation
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "$TITLE" | grep -Eq '^(feature|bugfix|hotfix|docs|poc)/LDS-[0-9]{1,4}: .{5,}$' \
+            || { echo "::error::Título inválido. Formato: {type}/LDS-XXXX: descripción en imperativo"; exit 1; }
