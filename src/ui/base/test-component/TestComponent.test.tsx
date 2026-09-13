@@ -72,13 +72,4 @@ describe('TestComponent', () => {
     });
   });
 
-  describe('intentional failure', () => {
-    // This test FAILS on purpose to verify that the pipeline catches red tests.
-    // The component renders an h1, but this test expects an h2.
-    it('fails intentionally: expects an h2 instead of an h1', () => {
-      render(<TestComponent text="Hello Lobo" />);
-
-      expect(screen.getByRole('heading', { level: 2, name: 'Hello Lobo' })).toBeInTheDocument();
-    });
-  });
 });
