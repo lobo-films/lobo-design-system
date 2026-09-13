@@ -3,9 +3,9 @@
 Este documento define las convenciones obligatorias para contribuir al
 repositorio.
 
-**Alcance actual:** nomenclatura de ramas y reglas de protección. Las
-convenciones de mensajes de commit, política de revisión y versionado están
-marcadas como pendientes al final.
+**Alcance actual:** nomenclatura de ramas, reglas de protección y uso de la
+plantilla de Pull Request. Las convenciones de mensajes de commit, política de
+revisión y versionado están marcadas como pendientes al final.
 
 ---
 
@@ -19,6 +19,8 @@ marcadas como pendientes al final.
    ticket.
 4. Las ramas `poc/` nunca se mergean (§4).
 5. Las ramas de automatización no se crean manualmente (§3.2).
+6. Todo PR usa la plantilla completa: ninguna sección se elimina y las que no
+   aplican se marcan como `N/A` (§5).
 
 ---
 
@@ -197,7 +199,67 @@ código entregable.
 
 ---
 
-## 5. Cómo se aplica la regla
+## 5. Plantilla de Pull Request
+
+Todo PR se abre con la plantilla `.github/pull_request_template.md`, que GitHub
+carga automáticamente en la descripción.
+
+### 5.1 Ninguna sección se elimina
+
+Todas las secciones de la plantilla deben estar presentes en la descripción del
+PR, aunque el cambio no las necesite:
+
+- `Summary`
+- `Jira URL`
+- `Description`
+- `Type of change`
+- `Validation Steps`
+- `Evidence`
+- `Impact`
+- `Checks`
+
+No se elimina, renombra ni reordena ninguna sección. Tampoco se eliminan ítems
+de las listas `Impact` y `Checks`.
+
+### 5.2 Secciones no aplicables se marcan como `N/A`
+
+Cuando una sección no aplica al cambio, se conserva el encabezado y se escribe
+`N/A` como contenido, acompañado de una justificación breve cuando el motivo no
+sea evidente:
+
+```markdown
+## Evidence
+
+N/A — cambio de documentación sin impacto visual.
+```
+
+En las listas de `Impact` y `Checks`, un ítem que no aplica se deja sin marcar y
+se añade `N/A` al final de la línea:
+
+```markdown
+- [ ] Storybook levanta sin errores de consola — N/A, solo cambia `docs/`
+```
+
+Reglas complementarias:
+
+- Una sección vacía, o que solo conserva los comentarios de la plantilla, **no
+  equivale a `N/A`**: se considera incompleta. Los comentarios HTML no se ven en
+  la vista renderizada del PR, así que el revisor no puede distinguirla de una
+  omisión.
+- `Summary`, `Jira URL` y `Type of change` aplican siempre y no admiten `N/A`.
+- `Evidence` es obligatoria en todo PR con impacto visual; en ese caso tampoco
+  admite `N/A`.
+
+### 5.3 Motivo
+
+Una estructura fija permite al revisor saber dónde buscar cada dato en cualquier
+PR. Además, distingue entre _no aplica_ —una decisión explícita del autor— y _se
+olvidó_. Si una sección se elimina, esa distinción desaparece y el revisor tiene
+que reconstruir qué se evaluó y qué no.
+
+---
+
+## 6. Cómo se aplica la regla
 
 La convención se valida en dos capas:
 
@@ -216,9 +278,9 @@ origen de un PR existente.
 
 ---
 
-## 6. Decisiones registradas
+## 7. Decisiones registradas
 
-### 6.1 Tope de 4 dígitos
+### 7.1 Tope de 4 dígitos
 
 El patrón acepta hasta `LDS-9999`. Es suficiente para el estado actual del
 proyecto, pero es un techo real: un design system con varios años de operación
@@ -226,14 +288,14 @@ puede superarlo. Cuando el contador se acerque a los cuatro dígitos, el límite
 superior debe eliminarse del patrón. El cambio es retrocompatible: toda rama
 válida hoy seguirá siéndolo.
 
-### 6.2 Ceros a la izquierda
+### 7.2 Ceros a la izquierda
 
 Se rechazan explícitamente. Sin esa restricción, `LDS-42`, `LDS-042` y
 `LDS-0042` son ramas distintas para el mismo ticket, lo que rompe cualquier
 automatización que derive el ID desde el nombre de la rama: changelogs, enlaces
 al tracker, trazabilidad en releases.
 
-### 6.3 Descripción opcional y no obligatoria
+### 7.3 Descripción opcional y no obligatoria
 
 Se permite pero no se exige, para que el nombre siga siendo parseable de forma
 determinista —tipo y ticket están en posición fija— sin perder legibilidad al
@@ -241,7 +303,7 @@ listar ramas. Obligarla añadiría discusiones de formato sin beneficio
 proporcional; prohibirla haría ilegible `git branch -a` sin consultar el
 tracker.
 
-### 6.4 Prohibición de push a `main`
+### 7.4 Prohibición de push a `main`
 
 No es una preferencia de proceso, es lo que hace verificables todas las demás
 reglas: sin ella, cualquier convención de ramas y cualquier check de CI son
@@ -249,7 +311,7 @@ opcionales en la práctica.
 
 ---
 
-## 7. Pendiente
+## 8. Pendiente
 
 - Convención de mensajes de commit y su validación.
 - Política de revisión de PRs: número de aprobaciones y criterios de bloqueo.

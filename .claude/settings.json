@@ -55,7 +55,9 @@
       "Bash(echo \"oxlint exit=$?\")",
       "Bash(echo \"tsc exit=$?\")",
       "Bash(git status *)",
-      "Bash(grep -n \"pnpm test\\\\` es más lento\" -A4 docs/adr/0007-storybook.md)"
+      "Bash(grep -n \"pnpm test\\\\` es más lento\" -A4 docs/adr/0007-storybook.md)",
+      "Bash(npx prettier *)",
+      "Bash(git stash *)"
     ],
     "additionalDirectories": [
       "/Users/hipstha/repos/lobo-design-system"
