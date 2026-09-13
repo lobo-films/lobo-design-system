@@ -23,6 +23,10 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # El proyecto `storybook` de Vitest corre en browser mode y necesita Chromium
+      - name: Install Playwright Chromium
+        if: matrix.check == 'test'
+        run: pnpm exec playwright install --with-deps chromium
       - run: pnpm run ${{ matrix.check }}
 
   build:
