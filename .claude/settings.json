@@ -1,9 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx tsc *)",
-      "Bash(npx prettier *)",
-      "Bash(npx oxlint *)",
+      "Bash(pnpm exec tsc *)",
+      "Bash(pnpm exec prettier *)",
+      "Bash(pnpm exec oxlint *)",
       "Bash(node -e 'const s=require\\(\"./node_modules/oxlint/configuration_schema.json\"\\); console.log\\(JSON.stringify\\(s.definitions.OxlintOptions.properties,null,1\\).slice\\(0,2500\\)\\)')",
       "Bash(./node_modules/.bin/oxlint --help)",
       "Bash(./node_modules/.bin/oxlint --rules -f json)",
@@ -16,7 +16,27 @@
       "Read(//Users/hipstha/**)",
       "Bash(echo \"exit=$?\")",
       "Bash(node -e 'const s=require\\(\"./node_modules/oxlint/configuration_schema.json\"\\); const p=s.properties; console.log\\(JSON.stringify\\(p.plugins?.description ?? p.plugins, null, 1\\).slice\\(0,1200\\)\\); console.log\\(JSON.stringify\\(p.categories?.description, null,1\\)\\); console.log\\(Object.keys\\(p\\)\\)')",
-      "Bash(node -e 'const r=require\\(\"/private/tmp/claude-501/-Users-hipstha-repos-lobo-design-system/90cac056-46d2-4570-8c5a-5e248c5745a0/scratchpad/rules.json\"\\); console.log\\(Object.keys\\(r[0]\\)\\); for \\(const x of r\\) if \\(/no-restricted-imports|no-floating-promises|no-cycle|no-misused-promises/.test\\(x.value\\)\\) console.log\\(JSON.stringify\\(x\\)\\)')"
+      "Bash(node -e 'const r=require\\(\"/private/tmp/claude-501/-Users-hipstha-repos-lobo-design-system/90cac056-46d2-4570-8c5a-5e248c5745a0/scratchpad/rules.json\"\\); console.log\\(Object.keys\\(r[0]\\)\\); for \\(const x of r\\) if \\(/no-restricted-imports|no-floating-promises|no-cycle|no-misused-promises/.test\\(x.value\\)\\) console.log\\(JSON.stringify\\(x\\)\\)')",
+      "Bash(pnpm -v)",
+      "Read(//Users/hipstha/Library/pnpm/**)",
+      "Bash(corepack --version)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(perl -pi -e ' *)",
+      "Bash(perl -pi -e 's/un `npm ci` la elimina y la primera/una instalación limpia \\(`rm -rf node_modules && pnpm install`\\) la elimina y la primera/' docs/adr/0005-prettier.md)",
+      "Bash(perl -pi -e 's/^package-lock.json -diff linguist-generated=true$/pnpm-lock.yaml -diff linguist-generated=true/' .gitattributes)",
+      "Bash(perl -pi -e 's/\"Bash\\\\\\(npx \\(tsc|prettier|oxlint\\) \\\\*\\\\\\)\"/\"Bash\\(pnpm exec $1 *\\)\"/' .claude/settings.json)",
+      "Bash(perl -0pi -e 's/  \"type\": \"module\",\\\\n/  \"type\": \"module\",\\\\n  \"packageManager\": \"pnpm\\\\@12.4.1\",\\\\n/' package.json)",
+      "Bash(perl -0pi -e 's/  - package-ecosystem: npm\\\\n    directory/  # El ecosistema \"npm\" de Dependabot cubre también pnpm \\(detecta pnpm-lock.yaml\\)\\\\n  - package-ecosystem: npm\\\\n    directory/' .github/dependabot.yml)",
+      "Bash(pnpm --version)",
+      "Bash(env)",
+      "Bash(grep -n -i -A8 'packageManager' pnpm-lock.yaml | head -40; echo ---; grep -c '' pnpm-lock.yaml; grep -n '^---' pnpm-lock.yaml; echo ---; ls ~/Library/pnpm ~/.local/share/pnpm 2>/dev/null | head; which corepack volta fnm nvm 2>/dev/null; cat .claude/settings.json; ls .husky .git/hooks 2>/dev/null | grep -v sample; cat .github/dependabot.yml)",
+      "Read(//Users/hipstha/.nvm/versions/node/**)",
+      "Bash(zsh -ic 'which pnpm; pnpm --version')",
+      "Bash(cd ~/.nvm/versions/node/v26.7.0/lib/node_modules/pnpm && sed -n 40,80p package.json; echo ---; cat pnpm; echo ---; head -60 install.js; ls node_modules node_modules/*)",
+      "Read(//Users/hipstha/.nvm/versions/node/v26.7.0/lib/node_modules/pnpm/**)",
+      "Bash(cd ~/.nvm/versions/node/v26.7.0/lib/node_modules/pnpm && grep -rl \"packageManagerDependencies\" dist bin 2>/dev/null | head; strings node_modules/@pnpm/exe.darwin-arm64/pnpm 2>/dev/null | grep -i -E \"packageManagerDependencies|resolve package manager dependencies|FROZEN_LOCKFILE_WITH_OUTDATED\" | head -20)",
+      "Read(//Users/hipstha/.nvm/alias/**)",
+      "Read(//Users/hipstha/Library/pnpm/store/**)"
     ]
   }
 }

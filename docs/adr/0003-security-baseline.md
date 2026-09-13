@@ -85,9 +85,10 @@ updates:
 ### Condición necesaria en el manifiesto
 
 **Dependabot no controla qué versión se instala; solo controla qué PRs
-propone.** El `ignore` no impide que un `npm install` sin lockfile, un
-`npm update` o una resolución transitiva traigan una versión distinta. El pin es
-efectivo solo si los rangos del `package.json` son consistentes con esta tabla:
+propone.** El `ignore` no impide que un `pnpm install` sin lockfile, un
+`pnpm update` o una resolución transitiva traigan una versión distinta. El pin
+es efectivo solo si los rangos del `package.json` son consistentes con esta
+tabla:
 
 - `vite`: `~8.3.0` — permite parches, bloquea minor
 - `storybook` y `@storybook/*`: `~10.6.0`
@@ -285,7 +286,7 @@ en Contexto.
 - Deshabilitación de _Dependency graph_ o _Dependabot alerts_ → el baseline
   pierde la capa de detección y la política de congelamiento deja de ser
   defendible; en ese escenario hay que descongelar o adoptar escaneo externo
-  (`npm audit` en CI, Socket, Snyk).
+  (`pnpm audit` en CI, Socket, Snyk).
 - Migración a monorepo Nx con `package.json` por paquete → `directory: "/"` deja
   de cubrir el árbol; se requiere `directories` (plural, acepta globs) o
   entradas adicionales por paquete.

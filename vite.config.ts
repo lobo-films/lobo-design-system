@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'node:url';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import babel from '@rolldown/plugin-babel';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -18,5 +18,12 @@ export default defineConfig({
         // additionalData: `@use "@/styles/tokens" as *;`,
       },
     },
+  },
+  test: {
+    environment: 'jsdom', // alternativa evaluada: happy-dom
+    globals: true,
+    setupFiles: ['/vitest.setup.ts'],
+    css: true,
+    coverage: { provider: 'v8', reporter: ['text', 'lcov'] },
   },
 });

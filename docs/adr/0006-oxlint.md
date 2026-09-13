@@ -192,10 +192,10 @@ archivos que coincidan.
 "lint:fix": "oxlint --fix"
 ```
 
-| Comando            | Uso                      | Comportamiento                                                                                           |
-| ------------------ | ------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `npm run lint`     | Verificación (CI, local) | Descubre `.oxlintrc.json` en la raíz y analiza el repositorio. Exit code `1` si hay al menos un `error`. |
-| `npm run lint:fix` | Corrección local         | Aplica únicamente los fixes marcados como seguros. Reporta lo que no pudo corregir.                      |
+| Comando         | Uso                      | Comportamiento                                                                                           |
+| --------------- | ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `pnpm lint`     | Verificación (CI, local) | Descubre `.oxlintrc.json` en la raíz y analiza el repositorio. Exit code `1` si hay al menos un `error`. |
+| `pnpm lint:fix` | Corrección local         | Aplica únicamente los fixes marcados como seguros. Reporta lo que no pudo corregir.                      |
 
 ### 3.1 Niveles de autofix
 
@@ -205,53 +205,53 @@ archivos que coincidan.
 | `--fix-suggestions` | Además aplica sugerencias que **pueden cambiar el comportamiento**. | Solo manual, revisando el diff completo. |
 | `--fix-dangerously` | Además aplica fixes marcados como peligrosos.                       | No recomendado.                          |
 
-Tras cualquier autofix: `npm run prettier:fix` (ADR 0005 §4).
+Tras cualquier autofix: `pnpm prettier:fix` (ADR 0005 §4).
 
 ### 3.2 Flags útiles para diagnóstico y CI
 
 ```bash
 # Fallar también ante warnings (recomendado para CI, ver §7)
-npx oxlint --deny-warnings
+pnpm exec oxlint --deny-warnings
 
 # Umbral de warnings tolerados
-npx oxlint --max-warnings=0
+pnpm exec oxlint --max-warnings=0
 
 # Reportar solo errores
-npx oxlint --quiet
+pnpm exec oxlint --quiet
 
 # Output estructurado (json, github, checkstyle, junit, ...)
-npx oxlint -f json
-npx oxlint -f github        # anotaciones inline en PRs de GitHub Actions
+pnpm exec oxlint -f json
+pnpm exec oxlint -f github  # anotaciones inline en PRs de GitHub Actions
 # Catálogo de reglas disponibles (categoría, fixability, type-aware)
-npx oxlint --rules
+pnpm exec oxlint --rules
 
 # Coste por regla
-npx oxlint --debug=timings
+pnpm exec oxlint --debug=timings
 
 # Configuración efectiva resuelta (sin ejecutar lint)
-npx oxlint --print-config
+pnpm exec oxlint --print-config
 
 # Archivos que se analizarían tras aplicar ignores
-npx oxlint --debug=files
+pnpm exec oxlint --debug=files
 
 # Lint de un subconjunto
-npx oxlint src/ui/base/Button
+pnpm exec oxlint src/ui/base/Button
 ```
 
 ---
 
 ## 4. División de responsabilidades
 
-| Herramienta         | Responsabilidad                                                                                        | Comando             |
-| ------------------- | ------------------------------------------------------------------------------------------------------ | ------------------- |
-| `tsc -b`            | Correctitud de tipos, incluyendo `noUnusedLocals`/`noUnusedParameters` y `noFallthroughCasesInSwitch`. | `npm run typecheck` |
-| Oxlint              | Correctitud semántica sin tipos, convenciones, React/hooks, a11y, módulos.                             | `npm run lint`      |
-| Prettier (ADR 0005) | Layout del código. Oxlint no emite diagnósticos de formato.                                            | `npm run prettier`  |
+| Herramienta         | Responsabilidad                                                                                        | Comando          |
+| ------------------- | ------------------------------------------------------------------------------------------------------ | ---------------- |
+| `tsc -b`            | Correctitud de tipos, incluyendo `noUnusedLocals`/`noUnusedParameters` y `noFallthroughCasesInSwitch`. | `pnpm typecheck` |
+| Oxlint              | Correctitud semántica sin tipos, convenciones, React/hooks, a11y, módulos.                             | `pnpm lint`      |
+| Prettier (ADR 0005) | Layout del código. Oxlint no emite diagnósticos de formato.                                            | `pnpm prettier`  |
 
 Secuencia de verificación completa:
 
 ```bash
-npm run typecheck && npm run lint && npm run prettier
+pnpm typecheck && pnpm lint && pnpm prettier
 ```
 
 ---
@@ -299,10 +299,10 @@ npm run typecheck && npm run lint && npm run prettier
 - **Rango de versión inconsistente con ADR 0003.** `package.json` declara
   `"oxlint": "^1.81.0"`, mientras ADR 0003 exige versión exacta `1.82.0` (sin
   `^`) y Dependabot la congela. El lockfile resuelve `1.82.0`, pero un
-  `npm install` sin lockfile o un `npm update` puede traer otra minor con reglas
-  nuevas en `correctness`/`suspicious`, que aquí son `error`. Corregir con
-  `npm i -D -E oxlint@1.82.0`.
-- **Sin workflow de CI ni hook de pre-commit** que ejecute `npm run lint`.
+  `pnpm install` sin lockfile o un `pnpm update` puede traer otra minor con
+  reglas nuevas en `correctness`/`suspicious`, que aquí son `error`. Corregir
+  con `pnpm add -D -E oxlint@1.82.0`.
+- **Sin workflow de CI ni hook de pre-commit** que ejecute `pnpm lint`.
   Recomendación: `oxlint --deny-warnings -f github` en CI.
 - **Evaluar `--type-aware`** con `oxlint-tsgolint` una vez estable, empezando
   por `no-floating-promises` y `no-misused-promises`.

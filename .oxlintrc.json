@@ -5,7 +5,13 @@
     "browser": true,
     "es2024": true
   },
-  "ignorePatterns": ["dist/**", "dist-ssr/**", "coverage/**", "storybook-static/**"],
+  "ignorePatterns": [
+    "dist/**",
+    "dist-ssr/**",
+    "coverage/**",
+    "storybook-static/**",
+    "vitest.setup.ts"
+  ],
   "options": {
     "reportUnusedDisableDirectives": "error"
   },

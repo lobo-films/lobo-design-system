@@ -25,7 +25,7 @@
 .editorconfig   text eol=lf
 
 # Lockfiles: se ocultan del diff y GitHub los colapsa en los PR
-package-lock.json -diff linguist-generated=true
+pnpm-lock.yaml -diff linguist-generated=true
 
 # Binarios (sin conversión de fin de línea ni diff de texto)
 *.png    binary

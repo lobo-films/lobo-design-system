@@ -1,5 +1,6 @@
 version: 2
 updates:
+  # El ecosistema "npm" de Dependabot cubre también pnpm (detecta pnpm-lock.yaml)
   - package-ecosystem: npm
     directory: '/'
     schedule:

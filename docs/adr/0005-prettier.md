@@ -68,11 +68,11 @@ El resto se fija explícitamente con el valor por defecto:
 
 ### 2.2 Overrides por tipo de archivo
 
-| Patrón              | Opciones                                | Justificación                                                                                                                                                                                                                                      |
-| ------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `*.json`, `*.jsonc` | `trailingComma: "none"`                 | Garantiza JSON estricto con independencia del parser que Prettier infiera (`json` o `jsonc`). Varios consumidores (`package.json` vía npm, `.oxlintrc.json`, `.prettierrc.json`) usan `JSON.parse` o parsers estrictos que rechazan comas finales. |
-| `*.md`, `*.mdx`     | `proseWrap: "always"`, `printWidth: 80` | Wrap duro de prosa a 80 columnas: los diffs de documentación (ADRs, `CONTRIBUTING.md`) son por línea y no por párrafo completo, y el texto es legible en cualquier visor sin soft-wrap. Tablas y bloques de código no se ven afectados.            |
-| `*.scss`, `*.css`   | `singleQuote: false`                    | Convención predominante en CSS/Sass y en la documentación oficial de Sass (`@use "..."`, `content: ""`).                                                                                                                                           |
+| Patrón              | Opciones                                | Justificación                                                                                                                                                                                                                                       |
+| ------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.json`, `*.jsonc` | `trailingComma: "none"`                 | Garantiza JSON estricto con independencia del parser que Prettier infiera (`json` o `jsonc`). Varios consumidores (`package.json` vía pnpm, `.oxlintrc.json`, `.prettierrc.json`) usan `JSON.parse` o parsers estrictos que rechazan comas finales. |
+| `*.md`, `*.mdx`     | `proseWrap: "always"`, `printWidth: 80` | Wrap duro de prosa a 80 columnas: los diffs de documentación (ADRs, `CONTRIBUTING.md`) son por línea y no por párrafo completo, y el texto es legible en cualquier visor sin soft-wrap. Tablas y bloques de código no se ven afectados.             |
+| `*.scss`, `*.css`   | `singleQuote: false`                    | Convención predominante en CSS/Sass y en la documentación oficial de Sass (`@use "..."`, `content: ""`).                                                                                                                                            |
 
 Los patrones sin `/` en `overrides[].files` se evalúan contra el basename, por
 lo que aplican a cualquier profundidad del árbol.
@@ -86,7 +86,7 @@ casos (p. ej. artefactos que sí se versionan pero no deben formatearse).
 | Grupo                                                                        | Motivo                                                                                           |
 | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `node_modules`, `.pnp*`                                                      | Dependencias de terceros.                                                                        |
-| Lockfiles (`package-lock.json`, `yarn.lock`, …)                              | El formato lo controla el package manager; reformatearlos genera diffs espurios en cada install. |
+| Lockfiles (`pnpm-lock.yaml`, `package-lock.json`, …)                         | El formato lo controla el package manager; reformatearlos genera diffs espurios en cada install. |
 | `dist`, `dist-ssr`, `build`, `storybook-static`, `coverage`, `*.tsbuildinfo` | Artefactos generados.                                                                            |
 | `.cache`, `.vite`, `.eslintcache`, `.stylelintcache`                         | Caches de herramientas.                                                                          |
 | `*.min.js`, `*.min.css`, `*.map`                                             | Output minificado o generado.                                                                    |
@@ -118,10 +118,10 @@ Prettier no impide que Git reescriba finales de línea en checkout.
 "prettier:fix": "prettier . --write --cache --log-level warn"
 ```
 
-| Comando                | Uso                                   | Comportamiento                                                                 |
-| ---------------------- | ------------------------------------- | ------------------------------------------------------------------------------ |
-| `npm run prettier`     | Verificación (CI, pre-push, revisión) | No escribe. Lista los archivos no conformes y retorna exit code distinto de 0. |
-| `npm run prettier:fix` | Corrección local                      | Reescribe in-place todos los archivos no conformes.                            |
+| Comando             | Uso                                   | Comportamiento                                                                 |
+| ------------------- | ------------------------------------- | ------------------------------------------------------------------------------ |
+| `pnpm prettier`     | Verificación (CI, pre-push, revisión) | No escribe. Lista los archivos no conformes y retorna exit code distinto de 0. |
+| `pnpm prettier:fix` | Corrección local                      | Reescribe in-place todos los archivos no conformes.                            |
 
 ### 3.1 Flags
 
@@ -137,15 +137,15 @@ Prettier no impide que Git reescriba finales de línea en checkout.
 
 ```bash
 # Verificar o formatear un subconjunto
-npx prettier src/ui --check
-npx prettier docs/adr/0005-prettier.md --write
+pnpm exec prettier src/ui --check
+pnpm exec prettier docs/adr/0005-prettier.md --write
 
 # Inspeccionar la configuración efectiva resuelta para un archivo (overrides incluidos)
-npx prettier --find-config-path src/main.tsx
-npx prettier --file-info docs/adr/0005-prettier.md
+pnpm exec prettier --find-config-path src/main.tsx
+pnpm exec prettier --file-info docs/adr/0005-prettier.md
 
 # Ejecución sin cache (p. ej. para descartar un falso negativo por cache corrupta)
-npx prettier . --check
+pnpm exec prettier . --check
 ```
 
 ---
@@ -159,9 +159,9 @@ npx prettier . --check
 - **`eslint/curly` se configura con `"all"`**, que es la única variante
   compatible con Prettier: las variantes `multi-line`/`multi-or-nest` dependen
   del layout del código, que Prettier puede alterar.
-- **Orden de ejecución al corregir:** `npm run lint:fix` →
-  `npm run prettier:fix`. Los autofixes del linter pueden producir código no
-  formateado; Prettier debe ser el último paso de escritura.
+- **Orden de ejecución al corregir:** `pnpm lint:fix` → `pnpm prettier:fix`. Los
+  autofixes del linter pueden producir código no formateado; Prettier debe ser
+  el último paso de escritura.
 
 ---
 
@@ -194,8 +194,9 @@ npx prettier . --check
   `.git-blame-ignore-revs` (pendiente, §7).
 - `proseWrap: "always"` en Markdown implica que editar una frase puede reflujar
   el párrafo completo, generando diffs de varias líneas por un cambio pequeño.
-- La cache vive en `node_modules/.cache`; un `npm ci` la elimina y la primera
-  ejecución posterior es completa.
+- La cache vive en `node_modules/.cache`; una instalación limpia
+  (`rm -rf node_modules && pnpm install`) la elimina y la primera ejecución
+  posterior es completa.
 
 ---
 
@@ -204,13 +205,13 @@ npx prettier . --check
 - **Versión no fijada.** `package.json` declara `"prettier": "^3.9.6"` y
   Prettier no está en la lista `ignore` de `.github/dependabot.yml`. Prettier
   puede introducir cambios de output en releases minor, lo que haría fallar
-  `npm run prettier` en CI sin cambios en el código. Recomendación: fijar
-  versión exacta (`npm i -D -E prettier@3.9.6`) y actualizar en PR dedicado que
+  `pnpm prettier` en CI sin cambios en el código. Recomendación: fijar versión
+  exacta (`pnpm add -D -E prettier@3.9.6`) y actualizar en PR dedicado que
   incluya el reformateo resultante, en línea con la política de ADR 0003.
 - **Sin enforcement automatizado.** No existe workflow de CI ni hook de
-  pre-commit que ejecute `npm run prettier`. Mientras no exista, la conformidad
+  pre-commit que ejecute `pnpm prettier`. Mientras no exista, la conformidad
   depende de ejecución manual.
-- **Estado actual no conforme.** `src/ui/index.ts` no pasa `npm run prettier`
+- **Estado actual no conforme.** `src/ui/index.ts` no pasa `pnpm prettier`
   (comillas dobles y ausencia de newline final).
 - **Integración con editor.** No existe `.vscode/extensions.json` ni
   `.vscode/settings.json` que recomienden la extensión de Prettier y
@@ -230,7 +231,7 @@ Esta decisión debe revisarse si:
 - Se adopta un plugin de Prettier (p. ej. ordenamiento de imports o de clases)
   que entre en conflicto con reglas de Oxlint (`import/first`,
   `import/newline-after-import`, `import/no-duplicates`).
-- El tiempo de `npm run prettier` en CI se vuelve un cuello de botella
+- El tiempo de `pnpm prettier` en CI se vuelve un cuello de botella
   significativo frente al resto del pipeline.
 
 ---

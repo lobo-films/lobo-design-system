@@ -229,13 +229,13 @@ de fijar `oxlint@^1.82.0`. Formalizar en un ADR aparte.
 # 1. Instancia única de Vite y del plugin de React.
 #    Una resolución duplicada de @vitejs/plugin-react produce
 #    "Invalid hook call" o "Duplicate __self prop found".
-npm ls vite @vitejs/plugin-react
+pnpm why vite @vitejs/plugin-react
 
 # 2. Que el piso de seguridad se haya resuelto correctamente.
-npm ls vitest @vitest/browser
+pnpm why vitest @vitest/browser
 
 # 3. Suite completa por CLI y luego el botón por story en el sidebar.
-vitest run --project=storybook
+pnpm exec vitest run --project=storybook
 ```
 
 ### Migración de config heredada a Vite 8
