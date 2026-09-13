@@ -1,0 +1,43 @@
+# Dependencias
+node_modules
+.pnp
+.pnp.js
+
+# Lockfiles (generados automáticamente)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Builds y artefactos
+dist
+dist-ssr
+build
+storybook-static
+coverage
+*.tsbuildinfo
+
+# Caches
+.cache
+.vite
+.eslintcache
+.stylelintcache
+
+# Archivos minificados y generados
+*.min.js
+*.min.css
+*.map
+
+# Assets estáticos
+public
+
+# Entorno y editor
+.env*
+.claude
+.idea
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+
+# Logs
+*.log

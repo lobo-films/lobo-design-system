@@ -5,7 +5,7 @@
     "lib": ["ES2023"],
 
     /* Bundler mode */
-    "module": "nodenext",
+    "module": "nodenext"
   },
   "include": ["vite.config.ts"]
 }

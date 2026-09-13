@@ -1,0 +1,48 @@
+# Normaliza todos los archivos de texto a LF (en el repo y en el working tree)
+* text=auto eol=lf
+
+# Código fuente y configuración
+*.js     text eol=lf
+*.jsx    text eol=lf
+*.mjs    text eol=lf
+*.cjs    text eol=lf
+*.ts     text eol=lf
+*.tsx    text eol=lf
+*.json   text eol=lf
+*.jsonc  text eol=lf
+*.css    text eol=lf
+*.scss   text eol=lf
+*.html   text eol=lf
+*.md     text eol=lf
+*.mdx    text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.sh     text eol=lf
+*.svg    text eol=lf
+.gitattributes  text eol=lf
+.gitignore      text eol=lf
+.prettierignore text eol=lf
+.editorconfig   text eol=lf
+
+# Lockfiles: se ocultan del diff y GitHub los colapsa en los PR
+package-lock.json -diff linguist-generated=true
+
+# Binarios (sin conversión de fin de línea ni diff de texto)
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.avif   binary
+*.ico    binary
+*.pdf    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+*.eot    binary
+*.mp4    binary
+*.webm   binary
+*.mp3    binary
+*.zip    binary
+*.gz     binary

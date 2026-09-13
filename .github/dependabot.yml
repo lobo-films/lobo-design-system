@@ -1,39 +1,39 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: "/"
+    directory: '/'
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
     ignore:
       # Vite: quedarse en 8.3.x → solo parches
-      - dependency-name: "vite"
+      - dependency-name: 'vite'
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
 
       # Storybook: quedarse en 10.6.x → solo parches
-      - dependency-name: "storybook"
+      - dependency-name: 'storybook'
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
-      - dependency-name: "@storybook/*"
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+      - dependency-name: '@storybook/*'
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
 
       # Congelados en versión exacta
-      - dependency-name: "vitest"
-        versions: [">= 0"]
-      - dependency-name: "@vitest/*"
-        versions: [">= 0"]
-      - dependency-name: "@vitejs/plugin-react"
-        versions: [">= 0"]
-      - dependency-name: "oxlint"
-        versions: [">= 0"]
+      - dependency-name: 'vitest'
+        versions: ['>= 0']
+      - dependency-name: '@vitest/*'
+        versions: ['>= 0']
+      - dependency-name: '@vitejs/plugin-react'
+        versions: ['>= 0']
+      - dependency-name: 'oxlint'
+        versions: ['>= 0']
 
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: '/'
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
