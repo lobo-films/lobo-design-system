@@ -14,5 +14,5 @@ jobs:
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: |
-          echo "$TITLE" | grep -Eq '^(feature|bugfix|hotfix|docs|poc)/LDS-[0-9]{1,4}: .{5,}$' \
+          echo "$TITLE" | grep -Eq '^(feature|bugfix|hotfix|docs|poc|arch)/LDS-[1-9][0-9]{0,3}: .{5,}$' \
             || { echo "::error::Invalid title. Pattern: {type}/LDS-XXXX: imperative description"; exit 1; }
