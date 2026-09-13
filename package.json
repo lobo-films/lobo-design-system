@@ -14,7 +14,9 @@
     "prettier:fix": "prettier . --write --cache --log-level warn",
     "test": "vitest run",
     "preview": "vite preview",
-    "clean-install": "rm -rf node_modules pnpm-lock.yaml && pnpm install"
+    "clean-install": "rm -rf node_modules pnpm-lock.yaml && pnpm install",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "react": "^19.2.8",
@@ -30,15 +32,24 @@
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
-    "@vitejs/plugin-react": "^6.1.1",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitejs/plugin-react": "~6.1.1",
+    "@vitest/coverage-v8": "~4.1.11",
     "babel-plugin-react-compiler": "^1.0.0",
     "jsdom": "^30.0.1",
-    "oxlint": "^1.81.0",
+    "oxlint": "~1.82.0",
     "prettier": "^3.9.6",
     "sass": "^1.104.1",
     "typescript": "~6.0.2",
-    "vite": "^8.3.0",
-    "vitest": "^4.1.11"
+    "vite": "~8.3.0",
+    "vitest": "~4.1.11",
+    "storybook": "~10.6.0",
+    "@storybook/react-vite": "~10.6.0",
+    "@chromatic-com/storybook": "~5.3.1",
+    "@storybook/addon-vitest": "~10.6.0",
+    "@storybook/addon-a11y": "~10.6.0",
+    "@storybook/addon-docs": "~10.6.0",
+    "@storybook/addon-mcp": "~10.6.0",
+    "@vitest/browser-playwright": "~4.1.11",
+    "playwright": "~1.63.0"
   }
 }

@@ -22,16 +22,53 @@ updates:
         update-types:
           - 'version-update:semver-major'
           - 'version-update:semver-minor'
+      - dependency-name: '@chromatic-com/storybook'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
 
-      # Congelados en versión exacta
+      # Vitest: quedarse en 4.1.x → solo parches
       - dependency-name: 'vitest'
-        versions: ['>= 0']
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
       - dependency-name: '@vitest/*'
-        versions: ['>= 0']
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+
+      # Playwright: quedarse en 1.63.x → solo parches (fija la revisión de Chromium)
+      - dependency-name: 'playwright'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+
+      # Plugin de React: quedarse en 6.1.x → solo parches (minor coordinado con Vite)
       - dependency-name: '@vitejs/plugin-react'
-        versions: ['>= 0']
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+
+      # Oxlint: quedarse en 1.82.x → solo parches (los minors añaden reglas)
       - dependency-name: 'oxlint'
-        versions: ['>= 0']
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+
+    groups:
+      # Paquetes que versionan en sincronía: sus parches llegan en un único PR
+      vitest:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+        update-types:
+          - 'patch'
+      storybook:
+        patterns:
+          - 'storybook'
+          - '@storybook/*'
+        update-types:
+          - 'patch'
 
   - package-ecosystem: github-actions
     directory: '/'

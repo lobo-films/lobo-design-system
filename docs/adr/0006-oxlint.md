@@ -1,13 +1,13 @@
 # ADR 0006 — Análisis estático con Oxlint
 
-| Campo               | Valor                                                                                                  |
-| ------------------- | ------------------------------------------------------------------------------------------------------ |
-| Estado              | Aceptado                                                                                               |
-| Fecha               | 2026-09-12                                                                                             |
-| Ámbito              | Linting de TS/TSX/JS: correctness, convenciones de TypeScript, React, módulos y accesibilidad          |
-| Supersede a         | —                                                                                                      |
-| Relacionada con     | 0001 (versiones del stack), 0003 (baseline de seguridad), 0004 (estructura), 0005 (Prettier)           |
-| Revisión programada | Al actualizar `oxlint` (versión congelada por ADR 0003) o al cumplirse una _Condición de invalidación_ |
+| Campo               | Valor                                                                                                 |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| Estado              | Aceptado                                                                                              |
+| Fecha               | 2026-09-12                                                                                            |
+| Ámbito              | Linting de TS/TSX/JS: correctness, convenciones de TypeScript, React, módulos y accesibilidad         |
+| Supersede a         | —                                                                                                     |
+| Relacionada con     | 0001 (versiones del stack), 0003 (baseline de seguridad), 0004 (estructura), 0005 (Prettier)          |
+| Revisión programada | Al subir el minor de `oxlint` (solo parches, ADR 0003) o al cumplirse una _Condición de invalidación_ |
 
 ---
 
@@ -296,12 +296,11 @@ pnpm typecheck && pnpm lint && pnpm prettier
 
 ## 7. Pendientes y riesgos abiertos
 
-- **Rango de versión inconsistente con ADR 0003.** `package.json` declara
-  `"oxlint": "^1.81.0"`, mientras ADR 0003 exige versión exacta `1.82.0` (sin
-  `^`) y Dependabot la congela. El lockfile resuelve `1.82.0`, pero un
-  `pnpm install` sin lockfile o un `pnpm update` puede traer otra minor con
-  reglas nuevas en `correctness`/`suspicious`, que aquí son `error`. Corregir
-  con `pnpm add -D -E oxlint@1.82.0`.
+- **Parches de `oxlint`.** Resuelto el rango (`~1.82.0`, conforme a ADR 0003):
+  un `pnpm update` ya no puede traer un minor con reglas nuevas en
+  `correctness`/`suspicious`, que aquí son `error`. Queda el riesgo menor de que
+  un parche corrija un falso negativo y haga fallar CI; se detecta en el PR de
+  Dependabot antes del merge.
 - **Sin workflow de CI ni hook de pre-commit** que ejecute `pnpm lint`.
   Recomendación: `oxlint --deny-warnings -f github` en CI.
 - **Evaluar `--type-aware`** con `oxlint-tsgolint` una vez estable, empezando

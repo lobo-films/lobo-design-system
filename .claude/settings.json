@@ -36,7 +36,29 @@
       "Read(//Users/hipstha/.nvm/versions/node/v26.7.0/lib/node_modules/pnpm/**)",
       "Bash(cd ~/.nvm/versions/node/v26.7.0/lib/node_modules/pnpm && grep -rl \"packageManagerDependencies\" dist bin 2>/dev/null | head; strings node_modules/@pnpm/exe.darwin-arm64/pnpm 2>/dev/null | grep -i -E \"packageManagerDependencies|resolve package manager dependencies|FROZEN_LOCKFILE_WITH_OUTDATED\" | head -20)",
       "Read(//Users/hipstha/.nvm/alias/**)",
-      "Read(//Users/hipstha/Library/pnpm/store/**)"
+      "Read(//Users/hipstha/Library/pnpm/store/**)",
+      "Bash(grep -nA2 \"^  /?\\(storybook@|'@storybook/react-vite@|'@chromatic-com/storybook@|playwright@\\)\" pnpm-lock.yaml)",
+      "Bash(timeout 180 ./node_modules/.bin/vitest run --project=storybook)",
+      "Bash(./node_modules/.bin/vitest run *)",
+      "Bash(grep -nA4 \"^  '@chromatic-com/storybook@\" pnpm-lock.yaml)",
+      "Bash(sed -n 175,185p pnpm-lock.yaml; ls ~/Library/pnpm 2>/dev/null; which corepack npx)",
+      "Bash(VITE_CONFIG_NATIVE_IGNORE_WARNING=true ./node_modules/.bin/vitest run)",
+      "Bash(grep -vE \"^\\\\s*$\")",
+      "Bash(grep -oE \".{0,300}plugin-react.{0,300}\" node_modules/@storybook/react-vite/dist/preset.js)",
+      "Bash(perl -ne 'while\\(/\\(.{0,200}plugin-react.{0,200}\\)/g\\){print \"$1\\\\n---\\\\n\"}' node_modules/@storybook/react-vite/dist/preset.js)",
+      "Bash(perl -0pe \"s/const dirname = .*?;\\\\n/const dirname = '\\\\/Users\\\\/hipstha\\\\/repos\\\\/lobo-design-system';\\\\n/; s/\\(\\\\}, \\\\{\\\\n\\\\s*\\)extends: true,/\\\\$1extends: false,/\" vite.config.ts)",
+      "Bash(VITE_CONFIG_NATIVE_IGNORE_WARNING=true ./node_modules/.bin/vitest run --config vite.noextends.tmp.config.ts --project=storybook)",
+      "Bash(time ./node_modules/.bin/vitest run)",
+      "Bash(./node_modules/.bin/oxlint)",
+      "Bash(./node_modules/.bin/tsc -b)",
+      "Bash(./node_modules/.bin/prettier . --check --log-level warn)",
+      "Bash(echo \"oxlint exit=$?\")",
+      "Bash(echo \"tsc exit=$?\")",
+      "Bash(git status *)",
+      "Bash(grep -n \"pnpm test\\\\` es más lento\" -A4 docs/adr/0007-storybook.md)"
+    ],
+    "additionalDirectories": [
+      "/Users/hipstha/repos/lobo-design-system"
     ]
   }
 }

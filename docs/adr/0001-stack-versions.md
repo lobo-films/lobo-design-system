@@ -31,11 +31,11 @@ condición se levanta esa restricción.
 
 ```json
 {
-  "vite": "8.3.x",
-  "storybook": "10.6.x",
-  "vitest": "^4.1.8",
-  "@vitejs/plugin-react": "^6.1.0",
-  "oxlint": "^1.82.0"
+  "vite": "~8.3.0",
+  "storybook": "~10.6.0",
+  "vitest": "~4.1.11",
+  "@vitejs/plugin-react": "~6.1.1",
+  "oxlint": "~1.82.0"
 }
 ```
 
@@ -43,9 +43,13 @@ condición se levanta esa restricción.
 | ---------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `vite`                 | `8.3.x`   | 8.3 es la línea que recibe parches regulares. 8.2 y 7.3 solo reciben fixes importantes y de seguridad. Se fija la minor porque un salto de minor en Vite implica cambios en el comportamiento de Rolldown.  |
 | `storybook`            | `10.6.x`  | Última minor estable. El soporte para Vite 8 llegó en 10.3 (con backport a 10.2.19), así que 10.6 lo incluye holgadamente. Se deja abierto el patch para recibir el fix de Vitest 5 sin tocar este archivo. |
-| `vitest`               | `^4.1.8`  | **Ver sección 3.** El piso `4.1.8` no es arbitrario: es la versión parcheada del advisory de Browser Mode (junto con 3.2.6 y 5.0.0-beta.4).                                                                 |
-| `@vitejs/plugin-react` | `^6.1.0`  | 6.1.0 es la primera versión con soporte nativo de React Compiler vía Oxc para Vite 8. Ver sección 5.                                                                                                        |
-| `oxlint`               | `^1.82.0` | Incluye las reglas derivadas de los passes de validación de React Compiler, promovidas a la categoría `correctness`.                                                                                        |
+| `vitest`               | `~4.1.11` | **Ver sección 3.** Piso de seguridad `4.1.8`: es la versión parcheada del advisory de Browser Mode (junto con 3.2.6 y 5.0.0-beta.4). Todo `@vitest/*` directo comparte el mismo rango.                      |
+| `@vitejs/plugin-react` | `~6.1.1`  | Piso `6.1.0`: primera versión con soporte nativo de React Compiler vía Oxc para Vite 8. Ver sección 5.                                                                                                      |
+| `oxlint`               | `~1.82.0` | Piso `1.82.0`: incluye las reglas derivadas de los passes de validación de React Compiler, promovidas a la categoría `correctness`.                                                                         |
+
+Todos los rangos usan `~` (solo parches dentro del minor), conforme a la
+política de ADR 0003. La columna _Razón_ justifica el minor elegido; el piso
+indica la versión mínima que no debe perderse al cambiar de minor.
 
 ### Requisitos de entorno
 
@@ -61,7 +65,7 @@ condición se levanta esa restricción.
 ## 3. Decisión principal: Vitest 4.1, no Vitest 5
 
 Vitest 5.0 salió el 2026-09-03 y es estable. Aun así el proyecto arranca en
-`^4.1.8`.
+Vitest 4.1 (`~4.1.11`).
 
 ### 3.1 Motivo
 
@@ -73,28 +77,41 @@ repositorio de Storybook:
 #### Issue #36082 — herencia de configuración entre proyectos
 
 En Vitest 5 los proyectos inline **heredan la config raíz por defecto**,
-incluyendo opciones de Vite como `plugins` y `resolve.alias`. En Vitest 4 había
-que declarar `extends: true` en cada proyecto para obtener ese comportamiento.
-Storybook genera su entrada en `test.projects` sin `extends`, asumiendo el
-default anterior (`false`).
+incluyendo opciones de Vite como `plugins` y `resolve.alias`. En Vitest 4 el
+default es `extends: false` y la herencia requiere declarar `extends: true` en
+cada proyecto.
 
-El resultado es que el proyecto `storybook` pierde el aislamiento respecto a la
-config raíz. Los modos de fallo concretos dependen de lo que haya en
-`vite.config.ts` y son **inferencia a partir del mecanismo**, no errores
-documentados en el issue:
+> **Corrección (2026-09-13).** La versión inicial de esta sección asumía que
+> Storybook genera su proyecto sin `extends` y recomendaba `extends: false` como
+> mitigación. Ambas premisas eran incorrectas. Se verificó contra el código
+> instalado y en ejecución:
+>
+> - Todas las plantillas de `@storybook/addon-vitest@10.6.0`
+>   (`vitest.config.4.template.ts`, `vitest.config.3.2.template.ts`,
+>   `vitest.config.template.ts`) declaran **`extends: true` explícito**. Es la
+>   configuración presente en `vite.config.ts`.
+> - `extends: true` es **necesario** en este repositorio. Con `extends: false`,
+>   una story que importa `@/…` falla con `Failed to resolve import "@/…"`: el
+>   proyecto `storybook` deja de heredar `resolve.alias` y, por el mismo
+>   mecanismo, `plugins` (plugin de React y React Compiler) y
+>   `css.preprocessorOptions` (SCSS/tokens, LDS-31).
+> - `@storybook/react-vite@10.6.0` no depende de `@vitejs/plugin-react`, así que
+>   heredar `react()` de la raíz no produce una segunda instancia. Suite
+>   completa (`vitest run`, ambos proyectos) en verde con Vitest 4.1.11.
 
-- Los `plugins` de la raíz (`react()`, `tailwindcss()`, `tsconfigPaths()`) se
-  aplican encima de los que ya compone `storybookTest()` → doble instancia de
-  `@vitejs/plugin-react`, que típicamente se manifiesta como `Invalid hook call`
-  o `Duplicate __self prop found`.
-- `test.environment: 'jsdom'` y `test.setupFiles` de la raíz se mezclan en un
-  proyecto que corre en browser mode real.
-- `test.include` de la raíz se hereda → el proyecto de Storybook intenta
-  levantar los tests unitarios como si fueran stories.
+**Impacto sobre este repositorio.** Como la herencia ya es explícita, el cambio
+de default de Vitest 5 no altera el comportamiento del proyecto `storybook`. Los
+riesgos de herencia (opciones de jsdom filtrándose al proyecto de browser) ya
+existen hoy en Vitest 4 con `extends: true`, y se controlan con una regla de
+configuración, no con `extends: false`:
 
-**Mitigable.** Basta con declarar `extends: false` explícito en el proyecto de
-Storybook, y el cambio es retrocompatible porque ese ya era el default implícito
-en Vitest 4.
+- `environment`, `setupFiles`, `globals`, `css` e `include` de tests unitarios
+  se declaran **dentro del proyecto unitario**, nunca en `test` raíz.
+- `test` raíz solo contiene opciones válidas para ambos proyectos (p. ej.
+  `coverage`).
+
+**Mitigación.** No requiere cambios en el consumidor: mantener `extends: true`
+explícito y la regla anterior.
 
 #### Issue #35752 — filtro por story desde la UI
 
@@ -120,7 +137,7 @@ Vitest 5 seis meses antes de necesitarlo.
 
 | Alternativa                                            | Por qué se descartó                                                                                                                                                 |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Vitest 5 + `extends: false` + usar solo la CLI         | Neutraliza #36082 pero deja #35752 vivo. Obliga a documentar y hacer cumplir "no uses el botón del sidebar", que es una regla que nadie va a recordar bajo presión. |
+| Vitest 5 + `extends: true` + usar solo la CLI          | Neutraliza #36082 pero deja #35752 vivo. Obliga a documentar y hacer cumplir "no uses el botón del sidebar", que es una regla que nadie va a recordar bajo presión. |
 | Vitest 5 con `patch-package` sobre `vitest-manager.ts` | Deuda técnica desproporcionada para ganar mejoras de rendimiento que no son bloqueantes. El parche se rompe en cada patch de Storybook.                             |
 | No usar `addon-vitest`, correr solo Vitest por CLI     | Renuncia a la integración que es la razón principal de elegir este stack.                                                                                           |
 | Quedarse en Vitest 3.x                                 | Sin beneficio: 4.1 tiene soporte de Vite 8 desde el día 1 y usa el Vite instalado en el proyecto en lugar de resolver su propia copia.                              |
@@ -144,7 +161,10 @@ Relevante pero no crítico al arrancar un proyecto.
 Se levanta la restricción cuando se cumplan las tres condiciones:
 
 1. `storybookjs/storybook#35752` cerrado y publicado en un release de Storybook.
-2. `storybookjs/storybook#36082` cerrado y publicado.
+2. `storybookjs/storybook#36082` cerrado y publicado. Con la configuración
+   actual (`extends: true` explícito) su impacto sobre este repositorio es nulo
+   (§3.1); se mantiene como criterio para no migrar sobre una integración con
+   issues S2 abiertos.
 3. Node 22.12+ ya fijado en `.nvmrc` y en la imagen de CI (requisito de Vitest
    5, junto con Vite ≥ 6.4.0 — este último ya se cumple).
 
@@ -154,9 +174,11 @@ Se levanta la restricción cuando se cumplan las tres condiciones:
 2. Subir `storybook` al patch que contenga los fixes.
 3. Subir `vitest` y todo el grupo `@vitest/*` a 5.x en un único PR, **separado**
    de cualquier otro cambio.
-4. Agregar `extends: false` al proyecto de Storybook aunque el fix ya venga
-   incluido: es explícito, retrocompatible y documenta la intención de
-   aislamiento.
+4. Mantener `extends: true` explícito en el proyecto de Storybook aunque en
+   Vitest 5 sea el default: documenta que la herencia de la raíz es intencional.
+   **No** cambiarlo a `extends: false`, que rompe la resolución de `@/…`, React
+   Compiler y SCSS en los story tests (ver corrección en §3.1). Confirmar que
+   `test` raíz no contiene opciones de jsdom.
 5. Revisar el resto de breaking changes de Vitest 5 que afectan a las `play`
    functions de las stories, porque usan el `expect` de Vitest reexportado por
    `storybook/test`:
@@ -193,7 +215,7 @@ muchos componentes; con la ruta Oxc el costo es marginal.
 
 **Recomendación:** ruta Oxc, con las reglas `correctness` de `oxlint` como red
 de seguridad — que es el diseño que el propio equipo de Oxc propone, y la razón
-de fijar `oxlint@^1.82.0`. Formalizar en un ADR aparte.
+de fijar `oxlint` en la línea 1.82 (`~1.82.0`). Formalizar en un ADR aparte.
 
 ---
 

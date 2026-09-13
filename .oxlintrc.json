@@ -169,13 +169,18 @@
       }
     },
     {
-      "files": ["*.config.{js,mjs,cjs,ts,mts}", "**/*.stories.{ts,tsx}", "src/App.tsx"],
+      "files": [
+        "*.config.{js,mjs,cjs,ts,mts}",
+        ".storybook/*.{ts,tsx}",
+        "**/*.stories.{ts,tsx}",
+        "src/App.tsx"
+      ],
       "rules": {
         "import/no-default-export": "off"
       }
     },
     {
-      "files": ["*.config.{js,mjs,cjs,ts,mts}", "scripts/**"],
+      "files": ["*.config.{js,mjs,cjs,ts,mts}", ".storybook/main.ts", "scripts/**"],
       "env": {
         "browser": false,
         "node": true

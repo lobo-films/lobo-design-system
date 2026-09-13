@@ -32,16 +32,19 @@ manualmente en ventanas planificadas, con Dependabot activo para el resto del
 
 ## Decisión
 
-Se fijan las siguientes versiones de tooling, con dos niveles de restricción
-distintos:
+Se fijan las siguientes versiones de tooling. Todas siguen la misma política:
+**solo parches** dentro del minor fijado; minors y majors requieren evaluación
+manual.
 
 | Paquete                      | Versión objetivo | Política     | Justificación                                                                                                                      |
 | ---------------------------- | ---------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `vite`                       | `8.3.x`          | Solo parches | Se aceptan correcciones de bugs dentro del minor; minor/major requieren evaluación manual por el acoplamiento con plugin y builder |
 | `storybook` + `@storybook/*` | `10.6.x`         | Solo parches | Los paquetes de Storybook versionan en sincronía; un bump parcial rompe la alineación del monorepo upstream                        |
-| `vitest` + `@vitest/*`       | `4.1.8`          | Congelado    | Versión exacta validada contra la suite actual                                                                                     |
-| `@vitejs/plugin-react`       | `6.1.0`          | Congelado    | Peer dependency directa de Vite; su bump debe coordinarse con el de Vite                                                           |
-| `oxlint`                     | `1.82.0`         | Congelado    | Cambios de reglas entre versiones alteran el resultado de CI sin cambios en el código                                              |
+| `@chromatic-com/storybook`   | `5.3.x`          | Solo parches | Addon con peer dependency de `storybook`; sus minors acompañan a los de Storybook                                                  |
+| `vitest` + `@vitest/*`       | `4.1.x`          | Solo parches | Los paquetes de Vitest versionan en sincronía y Vitest advierte si difieren. Piso de seguridad `4.1.8` (ADR 0001 §2)               |
+| `playwright`                 | `1.63.x`         | Solo parches | Cada minor trae una revisión nueva de Chromium: cambia el browser de los story tests y puede alterar el render (ADR 0007)          |
+| `@vitejs/plugin-react`       | `6.1.x`          | Solo parches | Peer dependency directa de Vite; su minor debe coordinarse con el de Vite. Piso `6.1.0` (ADR 0001 §2)                              |
+| `oxlint`                     | `1.82.x`         | Solo parches | Los minors añaden o recategorizan reglas y alteran el resultado de CI sin cambios en el código. Piso `1.82.0` (ADR 0001 §2)        |
 
 Todo paquete **no** listado arriba queda bajo actualización automática semanal
 sin restricciones.
@@ -66,14 +69,31 @@ updates:
       - dependency-name: '@storybook/*'
         update-types:
           ['version-update:semver-major', 'version-update:semver-minor']
+      - dependency-name: '@chromatic-com/storybook'
+        update-types:
+          ['version-update:semver-major', 'version-update:semver-minor']
       - dependency-name: 'vitest'
-        versions: ['>= 0']
+        update-types:
+          ['version-update:semver-major', 'version-update:semver-minor']
       - dependency-name: '@vitest/*'
-        versions: ['>= 0']
+        update-types:
+          ['version-update:semver-major', 'version-update:semver-minor']
+      - dependency-name: 'playwright'
+        update-types:
+          ['version-update:semver-major', 'version-update:semver-minor']
       - dependency-name: '@vitejs/plugin-react'
-        versions: ['>= 0']
+        update-types:
+          ['version-update:semver-major', 'version-update:semver-minor']
       - dependency-name: 'oxlint'
-        versions: ['>= 0']
+        update-types:
+          ['version-update:semver-major', 'version-update:semver-minor']
+    groups:
+      vitest:
+        patterns: ['vitest', '@vitest/*']
+        update-types: ['patch']
+      storybook:
+        patterns: ['storybook', '@storybook/*']
+        update-types: ['patch']
 
   - package-ecosystem: github-actions
     directory: '/'
@@ -92,11 +112,29 @@ tabla:
 
 - `vite`: `~8.3.0` — permite parches, bloquea minor
 - `storybook` y `@storybook/*`: `~10.6.0`
-- `vitest`, `@vitejs/plugin-react`, `oxlint`: versión exacta, **sin** `^` ni `~`
+- `@chromatic-com/storybook`: `~5.3.1`
+- `vitest` y todo `@vitest/*` directo (`@vitest/coverage-v8`,
+  `@vitest/browser-playwright`): `~4.1.11`, **el mismo rango en todos**
+- `playwright`: `~1.63.0`
+- `@vitejs/plugin-react`: `~6.1.1`
+- `oxlint`: `~1.82.0`
+
+Ningún paquete de la tabla usa `^`, que admite minors. Tampoco versión exacta:
+la reproducibilidad la garantiza el lockfile, y con `~` los parches se aplican
+con `pnpm update` o con el PR de Dependabot sin editar el rango.
 
 El lockfile committeado es la fuente de verdad para reproducibilidad. La config
 de Dependabot y los rangos del manifiesto son dos mitades del mismo candado; una
 sin la otra no sostiene la política.
+
+### Agrupación de parches
+
+Los paquetes que versionan en sincronía (`vitest` + `@vitest/*`, `storybook` +
+`@storybook/*`) se agrupan con `groups` restringido a `patch`. Sin agrupación,
+Dependabot abre un PR por paquete: mergear solo uno deja el grupo desalineado
+(p. ej. `vitest@4.1.12` con `@vitest/browser-playwright@4.1.11`), que es el modo
+de falla que la tabla intenta evitar. Los grupos se limitan a `patch`; los
+minors y majors de esos paquetes ya están excluidos por los `ignore`.
 
 ## Consecuencias
 
@@ -104,9 +142,12 @@ sin la otra no sostiene la política.
 
 - La cadena de tooling se actualiza en ventanas planificadas, no de forma
   oportunista. Requiere que alguien la agende — no ocurre sola.
-- Al congelar `@vitejs/plugin-react` mientras se aceptan parches de Vite,
-  cualquier subida futura de minor en Vite tiene al plugin como primer punto de
-  falla probable. Vite y el plugin deben subirse en el mismo PR.
+- Vite y `@vitejs/plugin-react` reciben parches por separado, pero cualquier
+  subida de minor en Vite tiene al plugin como primer punto de falla probable.
+  Los minors de Vite y del plugin deben subirse en el mismo PR.
+- Un parche de `oxlint` puede corregir falsos negativos de una regla y hacer
+  fallar CI sin cambios en el código. Se acepta: el PR de Dependabot lo muestra
+  antes del merge.
 - `open-pull-requests-limit: 5` aplica **por ecosistema**, no en total: pueden
   coexistir hasta 10 PRs abiertos (5 npm + 5 actions).
 - La sección de `github-actions` no tiene filtros y propondrá majors. Es
@@ -114,29 +155,32 @@ sin la otra no sostiene la política.
   quedarse atrás (runners deprecados, Node EOL en la action) es mayor que el de
   revisar el PR.
 
-### Riesgo principal: remediación de CVEs en paquetes congelados
+### Riesgo principal: remediación de CVEs fuera del minor fijado
 
 Con el estado de plataforma confirmado (ver _Configuración de plataforma_), la
 **detección** está cubierta: las alertas de Dependabot se generan para cualquier
 dependencia del grafo, con independencia de las condiciones `ignore` del
-`dependabot.yml`. Un CVE en `vitest` u `oxlint` aparecerá en la pestaña
-Security.
+`dependabot.yml`. Un CVE en cualquier paquete de la tabla aparecerá en la
+pestaña Security.
 
 El riesgo residual está en la **remediación automática**: las condiciones
 `ignore` afectan a Dependabot más allá de los version updates, por lo que un CVE
-en un paquete congelado puede no producir PR aunque _Dependabot security
-updates_ esté habilitado.
+cuyo fix solo exista en un minor o major posterior puede no producir PR aunque
+_Dependabot security updates_ esté habilitado.
 
-Queda pendiente verificar contra la documentación vigente de GitHub si ese
-comportamiento difiere entre un `ignore` por `versions: [">= 0"]` y uno por
-`update-types`. Mientras no esté confirmado, se asume el peor caso: **detección
-automática, remediación manual**.
+Queda pendiente verificar contra la documentación vigente de GitHub si un
+`ignore` por `update-types` bloquea también los security updates. Mientras no
+esté confirmado, se asume el peor caso: **detección automática, remediación
+manual** para fixes fuera del minor.
 
 **Mitigación requerida:** triage manual de las alertas correspondientes a los
-cinco paquetes de la tabla. Todos son devDependencies — no llegan al bundle de
-producción — lo que reduce pero no elimina la exposición: el vector realista es
-compromiso de la cadena de suministro ejecutándose en CI con acceso al runner y,
-según la configuración de permisos, al `GITHUB_TOKEN`.
+paquetes de la tabla. Un CVE corregido con un parche dentro del minor llega como
+PR de version update aunque el security update no se genere; la revisión manual
+es necesaria cuando el fix solo se publica en un minor o major posterior. Todos
+son devDependencies — no llegan al bundle de producción — lo que reduce pero no
+elimina la exposición: el vector realista es compromiso de la cadena de
+suministro ejecutándose en CI con acceso al runner y, según la configuración de
+permisos, al `GITHUB_TOKEN`.
 
 ### Nota operativa sobre CI
 
@@ -269,9 +313,10 @@ superficie de configuración. La ganancia no justifica el cambio al volumen
 actual de dependencias. Se reconsidera si el repo crece a monorepo con múltiples
 manifiestos.
 
-**Agrupación con `groups` en Dependabot.** Reduce el ruido consolidando PRs por
-patrón o por `dependency-type`. No se incluye en este baseline porque los
-paquetes que más ruido generan son precisamente los que quedan congelados. Es la
+**Agrupación general con `groups` en Dependabot.** Reduce el ruido consolidando
+PRs por patrón o por `dependency-type`. Solo se adopta para los parches de los
+grupos que versionan en sincronía (ver _Agrupación de parches_), donde resuelve
+un problema de consistencia y no de volumen. Extenderla al resto del árbol es la
 primera adición a considerar si el volumen de PRs vuelve a ser un problema.
 
 **Sin restricciones (estado previo).** Descartado por el modo de falla descrito
@@ -280,13 +325,13 @@ en Contexto.
 ## Qué invalidaría esta decisión
 
 - Confirmación de que los `ignore` bloquean los PRs de _security updates_ **y**
-  aparición de un CVE explotable en el tooling congelado → sustituir los
-  `ignore` por `versions: [">= 0"]` por `ignore` con `update-types`, que es
-  menos restrictivo, o retirar el paquete afectado de la tabla.
+  aparición de un CVE explotable cuyo fix solo existe fuera del minor fijado →
+  subir el minor manualmente en una ventana no planificada, o retirar el paquete
+  afectado de la tabla.
 - Deshabilitación de _Dependency graph_ o _Dependabot alerts_ → el baseline
-  pierde la capa de detección y la política de congelamiento deja de ser
-  defendible; en ese escenario hay que descongelar o adoptar escaneo externo
-  (`pnpm audit` en CI, Socket, Snyk).
+  pierde la capa de detección y la política de minors fijados deja de ser
+  defendible; en ese escenario hay que liberar los rangos o adoptar escaneo
+  externo (`pnpm audit` en CI, Socket, Snyk).
 - Migración a monorepo Nx con `package.json` por paquete → `directory: "/"` deja
   de cubrir el árbol; se requiere `directories` (plural, acepta globs) o
   entradas adicionales por paquete.
@@ -317,6 +362,8 @@ verificación de build de producción y arranque de Storybook antes del merge.
 | 2026-09-11 | Versión inicial: política de pinning y configuración de `dependabot.yml`                                                                                                                                                                                                        |
 | 2026-09-11 | Añadida sección _Configuración de plataforma_; confirmados dependency graph, alerts, malware alerts y security updates. Riesgo de seguridad reclasificado: detección cubierta, remediación automática pendiente de verificar                                                    |
 | 2026-09-11 | Registrada visibilidad privada. Secret scanning, push protection y private vulnerability reporting reclasificados de _pendiente de verificar_ a _no disponible por licencia/visibilidad_. Añadido escaneo de secretos en CI como control compensatorio pendiente de implementar |
+| 2026-09-13 | Instalación de Storybook (ADR 0007). `vitest` + `@vitest/*` pasan de congelado (`4.1.8`) a solo parches (`~4.1.11`). Añadidos `playwright` y `@chromatic-com/storybook` con política de solo parches. Añadidos `groups` de parches para Vitest y Storybook                      |
+| 2026-09-13 | `@vitejs/plugin-react` (`~6.1.1`) y `oxlint` (`~1.82.0`) pasan de congelados a solo parches; Dependabot usa `update-types` para ambos. Ya no hay paquetes con `versions: [">= 0"]`. Riesgo de CVEs reformulado en función del minor fijado                                      |
 
 ## Referencias
 
