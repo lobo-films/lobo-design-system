@@ -71,5 +71,4 @@ describe('TestComponent', () => {
       expect(screen.getAllByRole('heading')).toHaveLength(1);
     });
   });
-
 });
