@@ -6,7 +6,7 @@
 
 ## Jira URL
 
-<!-- Ticket URL, ejemplo https://hipstha.atlassian.net/browse/LDS-24 -->
+<!-- Se completa automáticamente a partir del nombre de la rama (workflow jira-url.yml) -->
 
 ## Description
 
