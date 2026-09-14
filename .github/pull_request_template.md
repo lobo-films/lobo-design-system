@@ -1,4 +1,4 @@
-# {type}(LDS-XXXX): {título en imperativo}
+# {type}/LDS-XXXX: {descripción en imperativo}
 
 ## Summary
 
@@ -20,6 +20,7 @@
 - [ ] hotfix
 - [ ] docs
 - [ ] poc
+- [ ] arch
 
 ## Validation Steps
 
@@ -44,14 +45,16 @@
 
 ## Checks
 
-- [ ] `npm run typecheck` en verde
-- [ ] `npm run oxlint` en verde
-- [ ] `npm run prettier` en verde
-- [ ] `npm run test` en verde
-- [ ] `npm run build` en verde
+- [ ] `pnpm run typecheck` en verde
+- [ ] `pnpm run lint` en verde
+- [ ] `pnpm run prettier` en verde
+- [ ] `pnpm run test` en verde
+- [ ] `pnpm run build` en verde
 - [ ] Storybook levanta sin errores de consola
 - [ ] Valores implementados verificados contra `Design System v2.0 Lobo` (sin
       valores inventados)
 - [ ] Accesibilidad revisada: contraste, foco visible, semántica
 - [ ] Documentación actualizada (`README.md` / docs del story) cuando aplica
-- [ ] Rama sigue el patrón `type/LDS-XXXX` y se eliminará al hacer merge
+- [ ] Rama sigue el patrón `type/LDS-XXXX[-descripcion]` y se eliminará al hacer
+      merge
+- [ ] Título del PR sigue el patrón `type/LDS-XXXX: descripción`

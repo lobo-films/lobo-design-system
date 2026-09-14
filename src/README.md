@@ -3,7 +3,7 @@
 Documentación de referencia rápida de la organización de directorios de Lobo
 Design System (LDS). Para el razonamiento y las decisiones detrás de esta
 estructura, ver
-[`0004-project-structure.md`](./docs/adr/0004-project-structure.md).
+[`0004-project-structure.md`](../docs/adr/0004-project-structure.md).
 
 ```
 src/
