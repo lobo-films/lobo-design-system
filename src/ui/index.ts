@@ -1,5 +1,3 @@
 console.warn('Hello world!!');
 
-console.log("this " + 
-  "is" + " a test"
-);
+console.warn('this is a test');
