@@ -3,9 +3,10 @@
 Este documento define las convenciones obligatorias para contribuir al
 repositorio.
 
-**Alcance actual:** nomenclatura de ramas, reglas de protección y uso de la
-plantilla de Pull Request. Las convenciones de mensajes de commit, política de
-revisión y versionado están marcadas como pendientes al final.
+**Alcance actual:** nomenclatura de ramas, reglas de protección, mensaje del
+commit inicial y uso de la plantilla de Pull Request. La convención completa de
+mensajes de commit, la política de revisión y el versionado están marcados como
+pendientes al final.
 
 ---
 
@@ -21,6 +22,7 @@ revisión y versionado están marcadas como pendientes al final.
 5. Las ramas de automatización no se crean manualmente (§3.2).
 6. Todo PR usa la plantilla completa: ninguna sección se elimina y las que no
    aplican se marcan como `N/A` (§5).
+7. El commit inicial de toda rama comienza con la clave del ticket (§6).
 
 ---
 
@@ -259,7 +261,58 @@ que reconstruir qué se evaluó y qué no.
 
 ---
 
-## 6. Cómo se aplica la regla
+## 6. Mensaje del commit inicial
+
+### 6.1 Formato
+
+El primer commit de toda rama debe comenzar con la clave del ticket, en el
+formato `{KEY}-{TICKET_ID}`, seguida de dos puntos, un espacio y una descripción
+breve. Opcionalmente puede ir precedida del tipo de rama:
+
+```
+^((feature|bugfix|hotfix|docs|poc|arch)/)?LDS-[1-9][0-9]{0,3}: .+$
+```
+
+Estructura: `[<tipo>/]LDS-<ticket>: <descripción>`
+
+| Componente      | Regla                                                            |
+| --------------- | ---------------------------------------------------------------- |
+| `<tipo>/`       | Opcional. Si se usa, debe coincidir con el tipo de la rama.      |
+| `LDS-<ticket>`  | Obligatorio. Mismo ticket que la rama, con las reglas de §2.1.   |
+| `: `            | Dos puntos seguidos de un espacio.                               |
+| `<descripción>` | Qué se hace en el commit. Admite mayúsculas, acentos y espacios. |
+
+### 6.2 Ejemplos
+
+Válidos, para la rama `feature/LDS-54-boton-variantes`:
+
+```
+LDS-54: Creación de variantes del botón
+feature/LDS-54: prueba de variantes del botón
+```
+
+Inválidos:
+
+| Mensaje                           | Motivo                                           |
+| --------------------------------- | ------------------------------------------------ |
+| `Creación de variantes del botón` | Falta la clave del ticket.                       |
+| `lds-54: Creación de variantes`   | Clave del proyecto en minúsculas.                |
+| `LDS-54 Creación de variantes`    | Faltan los dos puntos.                           |
+| `LDS-55: Creación de variantes`   | El ticket no coincide con el de la rama.         |
+| `bugfix/LDS-54: Creación de...`   | El tipo no coincide con el de la rama `feature`. |
+
+### 6.3 Motivo
+
+La clave del ticket en el mensaje permite que Jira asocie el commit al ticket
+desde el primer push, antes de que exista el PR, y deja la trazabilidad en el
+historial de git aunque la rama se elimine después del merge.
+
+La regla es obligatoria para el commit inicial. En los commits siguientes de la
+misma rama se recomienda mantener el mismo formato.
+
+---
+
+## 7. Cómo se aplica la regla
 
 La convención se valida en dos capas:
 
@@ -276,11 +329,15 @@ elimina la rama remota anterior y se vuelve a publicar. Si el PR ya estaba
 abierto, hay que cerrarlo y abrir uno nuevo: GitHub no permite cambiar la rama
 origen de un PR existente.
 
+El formato del commit inicial (§6) todavía no se valida de forma automática; su
+cumplimiento se revisa en el PR. Si el commit inicial no cumple el formato y la
+rama aún no fue publicada, se corrige con `git commit --amend`.
+
 ---
 
-## 7. Decisiones registradas
+## 8. Decisiones registradas
 
-### 7.1 Tope de 4 dígitos
+### 8.1 Tope de 4 dígitos
 
 El patrón acepta hasta `LDS-9999`. Es suficiente para el estado actual del
 proyecto, pero es un techo real: un design system con varios años de operación
@@ -288,14 +345,14 @@ puede superarlo. Cuando el contador se acerque a los cuatro dígitos, el límite
 superior debe eliminarse del patrón. El cambio es retrocompatible: toda rama
 válida hoy seguirá siéndolo.
 
-### 7.2 Ceros a la izquierda
+### 8.2 Ceros a la izquierda
 
 Se rechazan explícitamente. Sin esa restricción, `LDS-42`, `LDS-042` y
 `LDS-0042` son ramas distintas para el mismo ticket, lo que rompe cualquier
 automatización que derive el ID desde el nombre de la rama: changelogs, enlaces
 al tracker, trazabilidad en releases.
 
-### 7.3 Descripción opcional y no obligatoria
+### 8.3 Descripción opcional y no obligatoria
 
 Se permite pero no se exige, para que el nombre siga siendo parseable de forma
 determinista —tipo y ticket están en posición fija— sin perder legibilidad al
@@ -303,7 +360,7 @@ listar ramas. Obligarla añadiría discusiones de formato sin beneficio
 proporcional; prohibirla haría ilegible `git branch -a` sin consultar el
 tracker.
 
-### 7.4 Prohibición de push a `main`
+### 8.4 Prohibición de push a `main`
 
 No es una preferencia de proceso, es lo que hace verificables todas las demás
 reglas: sin ella, cualquier convención de ramas y cualquier check de CI son
@@ -311,9 +368,10 @@ opcionales en la práctica.
 
 ---
 
-## 8. Pendiente
+## 9. Pendiente
 
-- Convención de mensajes de commit y su validación.
+- Convención de mensajes de commit más allá del commit inicial (§6) y su
+  validación automática.
 - Política de revisión de PRs: número de aprobaciones y criterios de bloqueo.
 - Archivo `CODEOWNERS`: definición de propietarios por ruta y su asignación
   automática como revisores.
