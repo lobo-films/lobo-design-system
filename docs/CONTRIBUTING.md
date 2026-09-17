@@ -124,34 +124,24 @@ arch/LDS-3-migracion-a-nx
 
 ### 3.1 Ramas permanentes
 
-`main` y la rama de integración no siguen el patrón de nomenclatura y están
-protegidas. No se crean ni se eliminan como parte del trabajo diario, y ninguna
-de las dos admite push directo.
+`main` es la única rama permanente. No sigue el patrón de nomenclatura, está
+protegida y no admite push directo.
 
 `main` representa el estado publicado del design system: lo que hay en `main` es
 lo que están consumiendo las aplicaciones.
 
 ### 3.2 Destino del Pull Request
 
-| Tipo de rama                        | PR contra                             |
-| ----------------------------------- | ------------------------------------- |
-| `hotfix`                            | `main`                                |
-| `feature`, `bugfix`, `docs`, `arch` | Rama de integración                   |
-| `poc`                               | Rama de integración, sin mergear (§4) |
+No existe rama de integración. Toda rama de trabajo nace de `main` actualizado y
+vuelve a `main` mediante PR, sin importar su tipo.
 
-**Regla de sincronización obligatoria.** Un `hotfix` mergeado en `main` debe
-propagarse a la rama de integración inmediatamente después del merge, antes de
-retomar cualquier otro trabajo. Es responsabilidad de quien mergea el hotfix, no
-de la siguiente persona que se tropiece con el problema.
+| Tipo de rama                                  | PR contra                           |
+| --------------------------------------------- | ----------------------------------- |
+| `feature`, `bugfix`, `hotfix`, `docs`, `arch` | `main`                              |
+| `poc`                                         | `main`, en draft y sin mergear (§4) |
 
-Si esa propagación se omite, el fix desaparece en el siguiente release cuando la
-rama de integración avance sobre `main`, y el defecto reaparece en producción
-sin que ningún ticket lo explique. Es el modo de fallo más común de este modelo
-y no lo detecta ningún check automático.
-
-Si la propagación genera conflictos que no son triviales, se resuelven en una
-rama con el mismo ticket del hotfix. No se resuelven a mano directamente sobre
-la rama de integración, porque eso vuelve a ser un cambio sin revisión.
+La distinción entre `bugfix` y `hotfix` (§2.2) no cambia el destino del PR: solo
+determina la prioridad con la que se atiende.
 
 **Un `hotfix` no tiene checks reducidos.** Pasa por PR, por los mismos checks
 requeridos y por revisión, igual que cualquier otro cambio. La urgencia
