@@ -1,0 +1,311 @@
+// =============================================================================
+// _reset.scss
+// Reset moderno: elimina estilos del user-agent stylesheet sin romper
+// accesibilidad (focus visible, reduced motion, [hidden], semántica de listas).
+// Importar una sola vez, antes de cualquier otro estilo:
+//   @use 'reset';
+// =============================================================================
+
+// 1. Box model predecible
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// 2. Quitar márgenes y paddings por defecto
+* {
+  margin: 0;
+  padding: 0;
+}
+
+// 3. Documento
+html {
+  -webkit-text-size-adjust: 100%; // evita inflado de fuente en iOS al rotar
+  text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  // Nota: NO se fija font-size aquí para respetar la preferencia del usuario (rem).
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords; // permite animar a height:auto (progressive enhancement)
+  }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// 4. Contenedor raíz de React (Vite/CRA usan #root, Next.js usa #__next)
+#root,
+#__next {
+  isolation: isolate; // nuevo stacking context: z-index de portales/modales predecible
+}
+
+// 5. Tipografía: heredar en lugar de tamaños/pesos del navegador
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+p {
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+small {
+  font-size: 80%;
+}
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 1em;
+}
+
+abbr[title] {
+  text-decoration: underline dotted;
+}
+
+// 6. Enlaces
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+// 7. Listas
+// Quitar viñetas solo cuando se declara role="list" o dentro de nav:
+// Safari/VoiceOver elimina la semántica de lista con list-style: none.
+ul[role="list"],
+ol[role="list"],
+nav ul,
+nav ol {
+  list-style: none;
+}
+
+// 8. Media: bloque y responsivos por defecto
+img,
+picture,
+video,
+canvas,
+svg,
+iframe,
+embed,
+object {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+// SVG inline: heredar color del texto (iconos)
+svg {
+  fill: currentColor;
+}
+
+// 9. Formularios: heredar tipografía y color, quitar apariencia nativa
+input,
+button,
+textarea,
+select,
+optgroup {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+  appearance: button;
+  cursor: pointer;
+}
+
+button:disabled,
+[type="button"]:disabled,
+[type="reset"]:disabled,
+[type="submit"]:disabled {
+  cursor: not-allowed;
+}
+
+textarea {
+  resize: vertical;
+}
+
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+fieldset {
+  border: 0;
+  min-width: 0; // evita que fieldset crezca con contenido ancho
+}
+
+legend {
+  padding: 0;
+}
+
+::placeholder {
+  color: inherit;
+  opacity: 0.6;
+}
+
+// Quitar spinners de input number
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+// Quitar decoraciones de input search (WebKit)
+input[type="search"] {
+  -webkit-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+// Inner border de Firefox en botones
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+// 10. Tablas
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  text-indent: 0;
+  border-color: inherit;
+}
+
+th {
+  font-weight: inherit;
+  text-align: inherit;
+}
+
+// 11. Misceláneos
+hr {
+  height: 0;
+  color: inherit;
+  border: 0;
+  border-top: 1px solid;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: none;
+}
+
+summary {
+  display: list-item;
+  cursor: pointer;
+}
+
+dialog {
+  border: 0;
+  color: inherit;
+  background-color: transparent;
+}
+
+// [hidden] debe ganar aunque un componente defina display
+[hidden]:not([hidden="until-found"]) {
+  display: none !important;
+}
+
+// 12. Accesibilidad: foco visible solo con teclado (no quitar outline global)
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+// Offset para anclas con headers fijos
+:target {
+  scroll-margin-block: 5ex;
+}
+
+// 13. Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
