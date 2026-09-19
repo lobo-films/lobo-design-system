@@ -1,4 +1,5 @@
 :root {
+  // Escala de color OKLCH
   --color-neutral-50: #f3f5f9;
   --color-neutral-100: #e4e8ef;
   --color-neutral-200: #ccd1dc;
@@ -10,4 +11,12 @@
   --color-neutral-800: #1d222b;
   --color-neutral-900: #10141b;
   --color-neutral-950: #080a0f;
+
+  // Colores de estados
+  --color-accent-default: #6ea8da;
+  --color-accent-hover: #8cbce6;
+  --color-accent-active: #5590c2;
+  --color-accent-focus: #6ea8da; /* = --color-accent-default · se expresa como anillo 2px offset 2px */
+  --color-accent-disabled: #2c3340; /* = --color-neutral-700 · superficie exenta */
+  --color-accent-disabled-ink: #939bad; /* = --color-neutral-400 · etiqueta 4.55:1 sobre la superficie exenta */
 }
