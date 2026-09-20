@@ -39,4 +39,21 @@
   // acento y focus ring
   --accent: var(--color-accent-default);
   --focus-ring: var(--color-accent-default);
+
+  // fade, gradients y shadows
+  --overlay-scrim: rgb(8 10 15 / 0.6);
+  --overlay-chip: rgb(8 10 15 / 0.72);
+  --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.5);
+  --scrim-nav: linear-gradient(
+    to bottom,
+    rgb(8 10 15 / 0.72) 0%,
+    rgb(8 10 15 / 0.66) 22%,
+    rgb(8 10 15 / 0.52) 42%,
+    rgb(8 10 15 / 0.34) 60%,
+    rgb(8 10 15 / 0.18) 76%,
+    rgb(8 10 15 / 0.06) 90%,
+    rgb(8 10 15 / 0) 100%
+  );
+  --fade-card:
+    inset 0 -7rem 4rem -1.5rem var(--bg-canvas), inset 0 -3rem 2rem -1rem var(--bg-canvas);
 }
