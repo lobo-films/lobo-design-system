@@ -1,12 +1,12 @@
 // escala tipográfica
 :root {
-  --text-h1: clamp(2.500rem,1.949rem + 2.352vw,3.815rem)
-  --text-h2: clamp(2.000rem,1.629rem + 1.581vw,3.052rem)
-  --text-h3: clamp(1.750rem,1.507rem + 1.038vw,2.441rem)
-  --text-h4: clamp(1.500rem,1.340rem + 0.681vw,1.953rem)
-  --text-h5: clamp(1.250rem,1.140rem + 0.470vw,1.563rem)
-  --text-h6: clamp(1.125rem,1.081rem + 0.188vw,1.250rem)
-  --text-body-size: clamp(1.000rem,0.961rem + 0.169vw,1.125rem)
-  --text-small: 0.800rem   /* = 12.8px · forma declarada por el espécimen de la especificación */
-  --text-overline: 0.750rem   /* = 12px · forma declarada por el espécimen de la especificación */
+  --text-h1: clamp(2.5rem, 1.949rem + 2.352vw, 3.815rem);
+  --text-h2: clamp(2rem, 1.629rem + 1.581vw, 3.052rem);
+  --text-h3: clamp(1.75rem, 1.507rem + 1.038vw, 2.441rem);
+  --text-h4: clamp(1.5rem, 1.34rem + 0.681vw, 1.953rem);
+  --text-h5: clamp(1.25rem, 1.14rem + 0.47vw, 1.563rem);
+  --text-h6: clamp(1.125rem, 1.081rem + 0.188vw, 1.25rem);
+  --text-body-size: clamp(1rem, 0.961rem + 0.169vw, 1.125rem);
+  --text-small: 0.8rem;
+  --text-overline: 0.75rem;
 }
