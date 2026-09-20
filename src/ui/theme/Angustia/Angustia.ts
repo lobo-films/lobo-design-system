@@ -1,0 +1,33 @@
+import { create } from 'storybook/theming';
+import loboFilmsLogo from './assets/lobo-films-white.png';
+
+export const Angustia = create({
+  base: 'dark',
+  brandTitle: 'Lobo Films - Angustia theme',
+  brandImage: loboFilmsLogo,
+  brandTarget: '_self',
+  colorPrimary: '#6EA8DA' /* --color-accent-default */,
+  colorSecondary: '#6EA8DA' /* --accent */,
+  appBg: '#080A0F' /* --bg-canvas */,
+  appContentBg: '#080A0F' /* --bg-canvas */,
+  appPreviewBg: '#080A0F' /* --bg-canvas */,
+  appBorderColor: '#2C3340' /* --border-subtle */,
+  appBorderRadius: 0 /* --radius-none · esquina recta en todo lo interactivo */,
+  fontBase: "'Inter',system-ui,sans-serif" /* --font-sans */,
+  fontCode: 'ui-monospace,SFMono-Regular,Menlo,monospace' /* --font-mono */,
+  textColor: '#F3F5F9' /* --text-primary */,
+  textInverseColor: '#10141B' /* --text-on-accent */,
+  textMutedColor: '#939BAD' /* --text-muted */,
+  barBg: '#10141B' /* --bg-surface */,
+  barTextColor: '#B0B8C6' /* --text-secondary */,
+  barHoverColor: '#8CBCE6' /* --color-accent-hover */,
+  barSelectedColor: '#6EA8DA' /* --accent */,
+  buttonBg: '#1D222B' /* --bg-elevated */,
+  buttonBorder: '#2C3340' /* --border-subtle */,
+  booleanBg: '#1D222B' /* --bg-elevated */,
+  booleanSelectedBg: '#6EA8DA' /* --accent */,
+  inputBg: '#10141B' /* --bg-surface */,
+  inputBorder: '#2C3340' /* --border-subtle */,
+  inputTextColor: '#F3F5F9' /* --text-primary */,
+  inputBorderRadius: 0 /* --radius-none */,
+});
