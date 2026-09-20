@@ -1,0 +1,12 @@
+:root {
+  // tokens de dureación de animaciones
+  --dur-120: 120ms;
+  --dur-200: 200ms;
+  --dur-320: 320ms;
+  --dur-500: 500ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --zoom-thumb: 1.06;
+  --zoom-gallery: 1.03;
+  --zoom-card: 1.02;
+  --press-scale: 0.995;
+}
