@@ -1,5 +1,5 @@
-// escala tipográfica
 :root {
+  // escala tipográfica
   --text-h1: clamp(2.5rem, 1.949rem + 2.352vw, 3.815rem);
   --text-h2: clamp(2rem, 1.629rem + 1.581vw, 3.052rem);
   --text-h3: clamp(1.75rem, 1.507rem + 1.038vw, 2.441rem);
@@ -9,4 +9,32 @@
   --text-body-size: clamp(1rem, 0.961rem + 0.169vw, 1.125rem);
   --text-small: 0.8rem;
   --text-overline: 0.75rem;
+
+  // interlineado
+  --leading-display: 1.05;
+  --leading-h2: 1.1;
+  --leading-h3: 1.2;
+  --leading-h4: 1.3;
+  --leading-h5: 1.35;
+  --leading-h6: 1.4;
+  --leading-body: 1.6;
+  --leading-small: 1.5;
+  --leading-caption: 1.4;
+  --tracking-display: -0.02em;
+  --tracking-h3: -0.01em;
+  --tracking-h4: -0.008em;
+  --tracking-h5: -0.005em;
+  --tracking-small: 0.005em;
+  --tracking-caption: 0.01em;
+  --tracking-overline: 0.08em;
+  --tracking-label: 0.06em;
+  --measure-display: 16ch;
+  --measure-h2: 20ch;
+  --measure-h3: 28ch;
+  --measure-h4: 34ch;
+  --measure-h5: 42ch;
+  --measure-h6: 48ch;
+  --measure-body: 68ch;
+  --measure-small: 60ch;
+  --measure-caption: 56ch;
 }
