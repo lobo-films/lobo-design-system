@@ -41,10 +41,11 @@
   --focus-ring: var(--color-accent-default);
 
   // fade, gradients y shadows
-  --overlay-scrim:
-    rgb(8 10 15 / 0.6) --overlay-chip: rgb(8 10 15 / 0.72) --shadow-overlay: 0 8px 24px
-      rgb(0 0 0 / 0.5)
-      --scrim-nav: linear-gradient(
+  --overlay-scrim: rgb(8 10 15 / 0.6);
+  --overlay-chip: rgb(8 10 15 / 0.72);
+  --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.5);
+  --scrim-nav:
+    linear-gradient(
         to bottom,
         rgb(8 10 15 / 0.72) 0%,
         rgb(8 10 15 / 0.66) 22%,
