@@ -1,0 +1,69 @@
+@use "sass:map";
+@use "sass:math";
+@use "../tokens/breakpoints" as tokens;
+
+// Lógica de consumo de los breakpoints definidos en `tokens/breakpoints`.
+// Este módulo no emite CSS, por lo que puede importarse desde cualquier
+// componente sin duplicar reglas en el bundle.
+
+// Base tipográfica del navegador. Las media queries se emiten en `em` para que
+// respeten el tamaño de fuente configurado por la persona usuaria: con `px` un
+// usuario con la base a 20px seguiría recibiendo el layout de móvil.
+$root-font-size: 16px !default;
+
+// Desplazamiento aplicado a los límites superiores para que `down()` y `up()`
+// no solapen en el mismo píxel.
+$_step: 0.02px;
+
+@function _em($value) {
+  @return math.div($value, $root-font-size) * 1em;
+}
+
+@function value($name) {
+  @if not map.has-key(tokens.$breakpoints, $name) {
+    @error "Breakpoint `#{$name}` inexistente. Disponibles: #{map.keys(tokens.$breakpoints)}.";
+  }
+
+  @return map.get(tokens.$breakpoints, $name);
+}
+
+// Desde `$name` hacia arriba (mobile first).
+@mixin up($name) {
+  @media (width >= #{_em(value($name))}) {
+    @content;
+  }
+}
+
+// Por debajo de `$name`, sin incluirlo.
+@mixin down($name) {
+  @media (width <= #{_em(value($name) - $_step)}) {
+    @content;
+  }
+}
+
+// Desde `$from` inclusive hasta `$to` exclusive.
+@mixin between($from, $to) {
+  @media (#{_em(value($from))} <= width <= #{_em(value($to) - $_step)}) {
+    @content;
+  }
+}
+
+// Atajos por dispositivo. `mobile` es el estado base del sistema, así que no
+// abre media query: cubre cualquier viewport por debajo de tablet.
+@mixin mobile {
+  @include down("tablet") {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include between("tablet", "desktop") {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @include up("desktop") {
+    @content;
+  }
+}
