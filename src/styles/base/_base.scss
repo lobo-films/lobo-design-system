@@ -1,0 +1,27 @@
+// capa base de estilos a elementos nativos html
+
+html,
+body {
+  background: var(--bg-canvas);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  &:hover {
+    color: var(--color-accent-hover);
+  }
+}
+
+:focus-visible {
+  outline: var(--border-width-ring) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+[data-scroller] {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
