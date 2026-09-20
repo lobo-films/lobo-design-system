@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react-vite';
 import '@/styles/index.scss';
+import { Angustia } from '../src/ui/theme/Angustia/Angustia';
 
 const preview: Preview = {
   parameters: {
@@ -22,9 +23,12 @@ const preview: Preview = {
       // 'off' - skip a11y checks entirely
       test: 'todo',
     },
+    docs: {
+      theme: Angustia,
+    },
   },
 
-  // Fondo inicial; se puede cambiar desde la barra de herramientas
+  //Fondo inicial; se puede cambiar desde la barra de herramientas
   initialGlobals: {
     backgrounds: { value: 'dark' },
   },
