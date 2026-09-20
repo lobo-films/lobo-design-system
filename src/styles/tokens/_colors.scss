@@ -28,4 +28,16 @@
   // Colores de borde
   --border-subtle: var(--color-neutral-700);
   --border-strong: var(--color-neutral-400);
+
+  // Colores de texto
+  /* #F3F5F9 · titulares, nombre de pieza, etiqueta de nav */
+  --text-primary: var(--color-neutral-50);
+  /* #E4E8EF · párrafos de descripción y de ficha */
+  --text-body: var(--color-neutral-100);
+  /* #B0B8C6 · título de cabecera de sección, meta, ficha técnica en mono */
+  --text-secondary: var(--color-neutral-300);
+  /* #939BAD · overline, pie de foto, etiqueta de campo, migas, línea legal */
+  --text-muted: var(--color-neutral-400);
+  /* #10141B · única tinta permitida sobre acento */
+  --text-on-accent: var(--color-neutral-900);
 }
