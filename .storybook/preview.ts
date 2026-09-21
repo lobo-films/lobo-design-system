@@ -1,14 +1,16 @@
 import type { Preview } from '@storybook/react-vite';
 import '@/styles/index.scss';
 import { Angustia } from '../src/ui/theme/Angustia/Angustia';
+import { backgrounds, viewports } from '../src/ui/theme/Angustia/preview';
 
 const preview: Preview = {
   parameters: {
+    // Solo las superficies del sistema; Angustia es dark-only y no ofrece fondo claro.
     backgrounds: {
-      options: {
-        light: { name: 'Light', value: '#ffffff' },
-        dark: { name: 'Dark', value: '#1a1a1a' },
-      },
+      options: backgrounds,
+    },
+    viewport: {
+      options: viewports,
     },
     controls: {
       matchers: {
@@ -30,7 +32,7 @@ const preview: Preview = {
 
   //Fondo inicial; se puede cambiar desde la barra de herramientas
   initialGlobals: {
-    backgrounds: { value: 'dark' },
+    backgrounds: { value: 'canvas' },
   },
 };
 
