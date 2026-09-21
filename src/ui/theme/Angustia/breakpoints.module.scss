@@ -1,0 +1,12 @@
+@use "@/styles/tokens/breakpoints" as tokens;
+
+// Puente de solo lectura entre el mapa `$breakpoints` y JavaScript.
+// `:export` (ICSS) expone cada entrada del mapa como string en el objeto que
+// devuelve el import del módulo, sin emitir ninguna regla CSS. Así el selector de
+// viewport de Storybook consume los mismos valores que los mixins de
+// `abstracts/_breakpoints.scss` en lugar de copiarlos a mano (ADR 0010 §2.10).
+:export {
+  @each $name, $value in tokens.$breakpoints {
+    #{$name}: $value;
+  }
+}
